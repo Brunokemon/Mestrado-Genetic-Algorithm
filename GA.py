@@ -38,25 +38,19 @@ class GA(object):
 		#DNATotal = 1000
 
 		for n in xrange( tamanhoPopulacao ):
-
+			
+			self.individuos.append([])
 			DNAOcupado = 0
 			#m = quantos genes diferentes e possiveis existem
 			for m in xrange( len(self.genes) ):
 				if( m != len(self.genes) ):
-					self.genes[m]["quantia"] = np.random.random_integers( 0 , DNATotal - DNAOcupado )
+					self.individuos[n].append( np.random.random_integers( 0, DNATotal - DNAOcupado ) )
 
-	        		DNAOcupado = DNAOcupado + self.genes[m]["quantia"]
+	        		DNAOcupado = DNAOcupado + self.individuos[n][m]
 	        	else:
-	        		self.genes[m]["quantia"] = DNATotal - DNAOcupado
+	        		self.individuos[n].append( DNATotal - DNAOcupado )
 
-				self.individuos = self.genes 
 		print self.individuos
-
-	def Print( self ):
-		print "Primeira Geracao"
-		for number in xrange( len(self.individuos) ):
-			for gene in xrange( len(self.genes)):
-				print self.individuos[number][gene]["quantia"]
 
 	#Funcao para calculo de fitness com objetivo de minimizacao das caracteristicas
 	#Recebe array de individuos da populacao
