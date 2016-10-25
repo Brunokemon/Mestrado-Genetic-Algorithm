@@ -38,7 +38,6 @@ class GA(object):
 		#DNATotal = 1000
 
 		for n in xrange( tamanhoPopulacao ):
-			
 			self.individuos.append([])
 			DNAOcupado = 0
 			#m = quantos genes diferentes e possiveis existem
@@ -59,15 +58,26 @@ class GA(object):
 		
 		novasNotas = []
 
-		for individuo in self.individuos:	
+		for individuo in self.individuos:
 			notaLocal = 0
 	
-			for n in xrange( len(self.genes) ):	
-				notaLocal = notaLocal + individuo[n]["quantia"]*(individuo[n]["caracteristicaA"]+individuo[n]["caracteristicaB"]+individuo[n]["caracteristicaC"]+individuo[n]["caracteristicaD"]+individuo[n]["caracteristicaE"])
+			for gene in xrange( len(self.genes) ):
+				notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
 
-			novasNotas.append( 100000/notaLocal )
+			novasNotas.append( 1000000/notaLocal )
 
 		self.notas = novasNotas
+
+	def NormalizaNotas( self ):
+		notaTotal = 0
+		for nota in self.notas:
+			notaTotal = notaTotal + nota
+
+	def VerificaSoma( self ):
+		somaTotal = 0
+		for n in xrange( len(self.genes) ):
+			somaTotal = somaTotal + self.individuos[self.BestPerson()][n]
+		print somaTotal
 
 	#Retorna individuo com maior nota
 	#Recebe array de individuos da populacao
@@ -77,12 +87,16 @@ class GA(object):
 		return bestPersonIndex
 
 	def PrintBestPerson( self ):
+		bestPersonIndex = self.BestPerson()
 
-		bestPersonIndex = self.notas.index( max(self.notas) )		
-
+		print "Nota do melhor individuo"
 		print self.notas[bestPersonIndex]
-		for gene in xrange( len(self.genes)):
-			print self.individuos[ bestPersonIndex ][gene]["quantia"]
+
+		print "Melhor individuo"
+		print self.individuos[ bestPersonIndex ]
+
+		print "Soma dos genes"
+		self.VerificaSoma()
 
 	#Seleciona os melhores individuos baseado em probabilidade utilizando a formula de fitness e a reproducao se da por 50% pai e 50% mae
 	#Recebe arrays de individuos e de notas
@@ -120,17 +134,9 @@ class GA(object):
 
 			novoIndividuo = copy.deepcopy( self.individuos )
 			for gene in xrange( len(self.genes) ):
-				novosIndividuos[number][gene]["quantia"] = ( self.individuos[individuoEscolhido1][gene]["quantia"] + self.individuos[individuoEscolhido2][gene]["quantia"] )/2
+				novosIndividuos[number][gene] = ( self.individuos[individuoEscolhido1][gene] + self.individuos[individuoEscolhido2][gene] )/2
 
 		self.individuos = novosIndividuos
-
-
-#teste
-		print "Nova populacao"
-		for gene in xrange( len(self.genes)):
-			print self.individuos[number][gene]["quantia"]
-#teste
-
 
 		self.FitnessFunction()
 
@@ -143,13 +149,15 @@ class GA(object):
 		for nota in self.notas:
 			notaTotal = notaTotal + nota
 
-		novosIndividuos = []
+		novosIndividuos = copy.deepcopy( self.individuos )
 
-		for _ in xrange( len(self.individuos) ):
+		for number in xrange( len(self.individuos) ):
 
 			#Sorteio do individuo 1
+
 			probabilidade = np.random.uniform( 0 , notaTotal )
 			notaLocal = 0
+			individuoEscolhido1 = 0
 			for i in xrange( len(self.notas) ):
 				if notaLocal <= probabilidade and probabilidade <= (notaLocal + self.notas[i]):
 					individuoEscolhido1 = i
@@ -160,17 +168,18 @@ class GA(object):
 			#Sorteio do individuo 2
 			probabilidade = np.random.uniform( 0 , notaTotal )
 			notaLocal = 0
+			individuoEscolhido2 = 0
 			for i in xrange( len(self.notas) ):
 				if notaLocal <= probabilidade and probabilidade <= (notaLocal + self.notas[i]):
 					individuoEscolhido2 = i
 					break
 				notaLocal = notaLocal + self.notas[i]
 
+			novoIndividuo = copy.deepcopy( self.individuos )
+
 			influenciaParental = np.random.uniform()
 			for gene in xrange( len(self.genes) ):
-				novoIndividuo[gene]["quantia"] = self.individuos[individuoEscolhido1][gene]["quantia"]*(influenciaParental) + self.individuos[individuoEscolhido2][gene]["quantia"]*(1-influenciaParental)
-
-			novosIndividuos.append( novoIndividuo )
+				novosIndividuos[number][gene] = self.individuos[individuoEscolhido1][gene]*(influenciaParental) + self.individuos[individuoEscolhido2][gene]*(1-influenciaParental)
 
 		self.individuos = novosIndividuos
 		self.FitnessFunction()
@@ -184,9 +193,9 @@ class GA(object):
 		for nota in self.notas:
 			notaTotal = notaTotal + nota
 
-		novosIndividuos = []
+		novosIndividuos = copy.deepcopy( self.individuos )
 
-		individuoMaiorNota = self.notas.index( max(self.notas) )
+		individuoMaiorNota = self.bestPersonIndex()
 		segundaMaiorNota = 0
 		individuoSegundaMaiorNota = 0
 
@@ -198,9 +207,7 @@ class GA(object):
 		for _ in xrange( len(self.individuos) ):
 			influenciaParental = np.random.uniform()
 			for gene in xrange( len(self.genes) ):
-				novoIndividuo[gene]["quantia"] = self.individuos[individuoMaiorNota][gene]["quantia"]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]["quantia"]*(1-influenciaParental)
-
-			novosIndividuos.append( novoIndividuo )
+				novosIndividuos[number][gene] = self.individuos[individuoEscolhido1][gene]*(influenciaParental) + self.individuos[individuoEscolhido2][gene]*(1-influenciaParental)
 
 		self.individuos = novosIndividuos
 		self.FitnessFunction()

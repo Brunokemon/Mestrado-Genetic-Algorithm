@@ -1,9 +1,14 @@
 from GA import GA
 
-firstGA = GA( 2 )
+G = GA( 4 )
 
-"""
-for _ in xrange( 3 ):
-	firstGA.EvolucaoProbabilisticaMeioAMeio()
-	#firstGA.PrintBestPerson()
-"""
+G.FitnessFunction()
+
+G.PrintBestPerson()
+
+print ""
+
+for _ in xrange( 100 ):
+	G.EvolucaoProbabilisticaRandomica()
+
+G.PrintBestPerson()
