@@ -195,7 +195,7 @@ class GA(object):
 
 		novosIndividuos = copy.deepcopy( self.individuos )
 
-		individuoMaiorNota = self.bestPersonIndex()
+		individuoMaiorNota = self.BestPerson()
 		segundaMaiorNota = 0
 		individuoSegundaMaiorNota = 0
 
@@ -204,10 +204,10 @@ class GA(object):
 				segundaMaiorNota = nota
 				individuoSegundaMaiorNota = self.notas.index( segundaMaiorNota )
 
-		for _ in xrange( len(self.individuos) ):
+		for number in xrange( len(self.individuos) ):
 			influenciaParental = np.random.uniform()
 			for gene in xrange( len(self.genes) ):
-				novosIndividuos[number][gene] = self.individuos[individuoEscolhido1][gene]*(influenciaParental) + self.individuos[individuoEscolhido2][gene]*(1-influenciaParental)
+				novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
 
 		self.individuos = novosIndividuos
 		self.FitnessFunction()

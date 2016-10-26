@@ -9,6 +9,6 @@ G.PrintBestPerson()
 print ""
 
 for _ in xrange( 100 ):
-	G.EvolucaoProbabilisticaRandomica()
+	G.EvolucaoHierarquicaRandomica()
 
 G.PrintBestPerson()
