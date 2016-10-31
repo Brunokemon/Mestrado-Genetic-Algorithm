@@ -1,14 +1,12 @@
 from GA import GA
 
-G = GA( 4 )
+G = GA( 3 )
 
-G.FitnessFunction()
+G.FitnessFunctionPopulation()
 
 G.PrintBestPerson()
 
-print ""
-
-for _ in xrange( 100 ):
+for _ in xrange( 1 ):
 	G.EvolucaoHierarquicaRandomica()
 
 G.PrintBestPerson()

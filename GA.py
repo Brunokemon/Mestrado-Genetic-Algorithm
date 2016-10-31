@@ -2,9 +2,9 @@ from __future__ import division
 import numpy as np
 import math
 import copy
+from decimal import *
 
 class GA(object):
-
 
 	def __init__( self, tamanhoPopulacao ):
 
@@ -52,9 +52,8 @@ class GA(object):
 		print self.individuos
 
 	#Funcao para calculo de fitness com objetivo de minimizacao das caracteristicas
-	#Recebe array de individuos da populacao
 	#Devolve array de notas de cada individuo
-	def FitnessFunction( self ):
+	def FitnessFunctionPopulation( self ):
 		
 		novasNotas = []
 
@@ -68,15 +67,27 @@ class GA(object):
 
 		self.notas = novasNotas
 
+	#Funcao para calculo de fitness com objetivo de minimizacao das caracteristicas
+	#Devolve nota do individuo
+	def FitnessFunctionIndividual( self, individuo ):
+		
+		notaLocal = 0
+
+		for gene in xrange( len(self.genes) ):
+			notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
+
+		return 1000000/notaLocal 
+
+	#PRECISA COMPLETAR
 	def NormalizaNotas( self ):
 		notaTotal = 0
 		for nota in self.notas:
 			notaTotal = notaTotal + nota
 
-	def VerificaSoma( self ):
+	def VerificaSoma( self, individuo ):
 		somaTotal = 0
-		for n in xrange( len(self.genes) ):
-			somaTotal = somaTotal + self.individuos[self.BestPerson()][n]
+		for n in xrange( len(self.genes) +1):
+			somaTotal = somaTotal + individuo[n]
 		print somaTotal
 
 	#Retorna individuo com maior nota
@@ -88,15 +99,12 @@ class GA(object):
 
 	def PrintBestPerson( self ):
 		bestPersonIndex = self.BestPerson()
-
 		print "Nota do melhor individuo"
 		print self.notas[bestPersonIndex]
-
 		print "Melhor individuo"
 		print self.individuos[ bestPersonIndex ]
-
 		print "Soma dos genes"
-		self.VerificaSoma()
+		self.VerificaSoma( self.individuos[ bestPersonIndex ] )
 
 	#Seleciona os melhores individuos baseado em probabilidade utilizando a formula de fitness e a reproducao se da por 50% pai e 50% mae
 	#Recebe arrays de individuos e de notas
@@ -205,9 +213,27 @@ class GA(object):
 				individuoSegundaMaiorNota = self.notas.index( segundaMaiorNota )
 
 		for number in xrange( len(self.individuos) ):
-			influenciaParental = np.random.uniform()
-			for gene in xrange( len(self.genes) ):
-				novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
+			
+			#
+			l = False
+			#
+
+			better = False
+			while better is not True:
+
+				influenciaParental = np.random.uniform()
+				for gene in xrange( len(self.genes) ):
+					novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
+
+				#
+				if l is False:
+					print novosIndividuos[number]
+					print self.FitnessFunctionIndividual( novosIndividuos[number] )
+					l = True
+				#
+
+				if self.FitnessFunctionIndividual( novosIndividuos[number] ) > self.notas[individuoMaiorNota]:
+					better = True
 
 		self.individuos = novosIndividuos
-		self.FitnessFunction()
+		self.FitnessFunctionPopulation()
