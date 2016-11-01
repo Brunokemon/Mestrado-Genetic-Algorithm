@@ -2,7 +2,6 @@ from __future__ import division
 import numpy as np
 import math
 import copy
-from decimal import *
 
 class GA(object):
 
@@ -42,11 +41,11 @@ class GA(object):
 			#m = quantos genes diferentes e possiveis existem
 			for m in xrange( len(self.genes) -1 ):
 				if( m != len(self.genes) ):
-					self.individuos[n].append( Decimal( np.random.random_integers( 0, DNATotal - DNAOcupado ) ) )
+					self.individuos[n].append( np.random.random_integers( 0, DNATotal - DNAOcupado ) ) 
 
-	        		DNAOcupado = Decimal(DNAOcupado) + Decimal(self.individuos[n][m])
+	        		DNAOcupado = DNAOcupado + self.individuos[n][m]
 	        	else:
-	        		self.individuos[n].append( Decimal(DNATotal) - Decimal(DNAOcupado) )
+	        		self.individuos[n].append( DNATotal - DNAOcupado )
 
 		self.FitnessFunctionPopulation()
 
@@ -203,9 +202,9 @@ class GA(object):
 
 		for number in xrange( len(self.individuos) ):
 
-			influenciaParental = Decimal(np.random.uniform())
+			influenciaParental = np.random.uniform()
 			for gene in xrange( len(self.genes) ):
-				novosIndividuos[number][gene] = Decimal(self.individuos[individuoMaiorNota][gene])*(influenciaParental) + Decimal(self.individuos[individuoSegundaMaiorNota][gene])*Decimal((1-influenciaParental))
+				novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*influenciaParental + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
 
 		self.individuos = novosIndividuos
 		self.FitnessFunctionPopulation()
