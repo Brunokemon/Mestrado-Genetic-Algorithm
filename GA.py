@@ -62,7 +62,7 @@ class GA(object):
 			for gene in xrange( len(self.genes) ):
 				notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
 
-			novasNotas.append( notaLocal )
+			novasNotas.append( 15000 - notaLocal )
 
 		self.notas = novasNotas
 
@@ -203,6 +203,35 @@ class GA(object):
 
 		for number in xrange( len(self.individuos) ):
 
+			influenciaParental = np.random.uniform()
+			for gene in xrange( len(self.genes) ):
+				novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
+
+		self.individuos = novosIndividuos
+		self.FitnessFunctionPopulation()
+
+	#Seleciona os 2 melhores individuos e a reproducao se da por 100-x(gerado randomicamente)% pai e x% mae
+	#Recebe arrays de individuos e de notas
+	#Devolve nova populacao (novos individuos)
+	def EvolucaoHierarquicaRandomica2( self  ):
+
+		notaTotal = 0
+		for nota in self.notas:
+			notaTotal = notaTotal + nota
+
+		novosIndividuos = copy.deepcopy( self.individuos )
+
+		individuoMaiorNota = self.BestPerson()
+		segundaMaiorNota = 0
+		individuoSegundaMaiorNota = 0
+
+		for nota in self.notas:
+			if nota is not self.notas[individuoMaiorNota] and nota > segundaMaiorNota :
+				segundaMaiorNota = nota
+				individuoSegundaMaiorNota = self.notas.index( segundaMaiorNota )
+
+		for number in xrange( len(self.individuos) ):
+
 			better = False
 			while better is not True:
 
@@ -210,7 +239,9 @@ class GA(object):
 				for gene in xrange( len(self.genes) ):
 					novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
 
-				if self.FitnessFunctionIndividual( novosIndividuos[number] ) > self.notas[individuoMaiorNota]:
+				print self.FitnessFunctionIndividual( novosIndividuos[number] )
+
+				if (self.FitnessFunctionIndividual( novosIndividuos[number] ) > self.notas[individuoMaiorNota]):
 					better = True
 
 		self.individuos = novosIndividuos
