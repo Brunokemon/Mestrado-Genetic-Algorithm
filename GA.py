@@ -40,7 +40,7 @@ class GA(object):
 			self.individuos.append([])
 			DNAOcupado = 0
 			#m = quantos genes diferentes e possiveis existem
-			for m in xrange( len(self.genes) ):
+			for m in xrange( len(self.genes) -1 ):
 				if( m != len(self.genes) ):
 					self.individuos[n].append( Decimal( np.random.random_integers( 0, DNATotal - DNAOcupado ) ) )
 
@@ -79,7 +79,7 @@ class GA(object):
 
 	def VerificaSomaGenes( self, individuo ):
 		somaTotal = 0
-		for n in xrange( len(self.genes) +1):
+		for n in xrange( len(self.genes) ):
 			somaTotal = somaTotal + individuo[n]
 		return somaTotal
 
@@ -224,6 +224,9 @@ class GA(object):
 		individuoMaiorNota = self.BestPerson()
 		segundaMaiorNota = 0
 		individuoSegundaMaiorNota = 0
+
+		self.VerificaSomaGenes()
+		self.VerificaSomaGenes()
 
 		for nota in self.notas:
 			if nota is not self.notas[individuoMaiorNota] and nota > segundaMaiorNota :
