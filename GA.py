@@ -39,13 +39,13 @@ class GA(object):
 			self.individuos.append([])
 			DNAOcupado = 0
 			#m = quantos genes diferentes e possiveis existem
-			for m in xrange( len(self.genes) -1 ):
-				if( m != len(self.genes) ):
-					self.individuos[n].append( np.random.random_integers( 0, DNATotal - DNAOcupado ) ) 
 
-	        		DNAOcupado = DNAOcupado + self.individuos[n][m]
-	        	else:
-	        		self.individuos[n].append( DNATotal - DNAOcupado )
+			for m in xrange(len(self.genes)):
+				if m==(len(self.genes)-1):
+					self.individuos[n].append(DNATotal-DNAOcupado)
+				else:
+					self.individuos[n].append(np.random.random_integers(0,DNATotal-DNAOcupado))
+					DNAOcupado = DNAOcupado+self.individuos[n][m]
 
 		self.FitnessFunctionPopulation()
 
@@ -70,12 +70,12 @@ class GA(object):
 	def FitnessFunctionIndividual( self, individuo ):
 		
 		notaLocal = 0
-
 		for gene in xrange( len(self.genes) ):
 			notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
 
-		return notaLocal
+		return 15000 - notaLocal
 
+	#Verifica se a soma dos genes do individuo resultam em 100%
 	def VerificaSomaGenes( self, individuo ):
 		somaTotal = 0
 		for n in xrange( len(self.genes) ):
@@ -92,7 +92,6 @@ class GA(object):
 	def PrintBestPerson( self ):
 		bestPersonIndex = self.BestPerson()
 		print "Nota do melhor individuo: " + str(self.notas[bestPersonIndex])
-		print "Soma dos genes: " + str( self.VerificaSomaGenes( self.individuos[ bestPersonIndex ] ) )
 
 	#Seleciona os melhores individuos baseado em probabilidade utilizando a formula de fitness e a reproducao se da por 50% pai e 50% mae
 	#Recebe arrays de individuos e de notas
@@ -213,38 +212,33 @@ class GA(object):
 	#Recebe arrays de individuos e de notas
 	#Devolve nova populacao (novos individuos)
 	def EvolucaoHierarquicaRandomica2( self  ):
-
 		notaTotal = 0
 		for nota in self.notas:
 			notaTotal = notaTotal + nota
 
-		novosIndividuos = copy.deepcopy( self.individuos )
+		novosIndividuos = copy.copy( self.individuos )
 
 		individuoMaiorNota = self.BestPerson()
 		segundaMaiorNota = 0
 		individuoSegundaMaiorNota = 0
-
-		self.VerificaSomaGenes()
-		self.VerificaSomaGenes()
-
+		print self.notas[individuoMaiorNota]
 		for nota in self.notas:
 			if nota is not self.notas[individuoMaiorNota] and nota > segundaMaiorNota :
 				segundaMaiorNota = nota
 				individuoSegundaMaiorNota = self.notas.index( segundaMaiorNota )
 
+#PRECISA MEXER AQUI
 		for number in xrange( len(self.individuos) ):
-
-			better = False
-			while better is not True:
-
-				influenciaParental = np.random.uniform()
+			
+			while True is True :
+				influenciaParental = np.random.random_sample()
 				for gene in xrange( len(self.genes) ):
 					novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
 
 				print self.FitnessFunctionIndividual( novosIndividuos[number] )
 
-				if (self.FitnessFunctionIndividual( novosIndividuos[number] ) > self.notas[individuoMaiorNota]):
-					better = True
+				if (self.FitnessFunctionIndividual(novosIndividuos[number])>self.notas[individuoMaiorNota]):
+					break
 
 		self.individuos = novosIndividuos
 		self.FitnessFunctionPopulation()
