@@ -38,12 +38,13 @@ class GA(object):
 		for n in xrange( tamanhoPopulacao ):
 			self.individuos.append([])
 			DNAOcupado = 0
-			#m = quantos genes diferentes e possiveis existem
 
 			for m in xrange(len(self.genes)):
 				if m==(len(self.genes)-1):
 					self.individuos[n].append(DNATotal-DNAOcupado)
+					print m
 				else:
+					print m
 					self.individuos[n].append(np.random.random_integers(0,DNATotal-DNAOcupado))
 					DNAOcupado = DNAOcupado+self.individuos[n][m]
 
@@ -54,13 +55,10 @@ class GA(object):
 	def FitnessFunctionPopulation( self ):
 		
 		novasNotas = []
-
 		for individuo in self.individuos:
-			notaLocal = 0
-	
+			notaLocal = 0	
 			for gene in xrange( len(self.genes) ):
 				notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
-
 			novasNotas.append( 15000 - notaLocal )
 
 		self.notas = novasNotas
@@ -68,7 +66,6 @@ class GA(object):
 	#Funcao para calculo de fitness com objetivo de minimizacao das caracteristicas
 	#Devolve nota do individuo
 	def FitnessFunctionIndividual( self, individuo ):
-		
 		notaLocal = 0
 		for gene in xrange( len(self.genes) ):
 			notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
@@ -103,7 +100,6 @@ class GA(object):
 			notaTotal = notaTotal + nota
 
 		novosIndividuos = copy.deepcopy( self.individuos )
-
 		for number in xrange( len(self.individuos) ):
 
 			#Sorteio do individuo 1
@@ -132,7 +128,6 @@ class GA(object):
 				novosIndividuos[number][gene] = ( self.individuos[individuoEscolhido1][gene] + self.individuos[individuoEscolhido2][gene] )/2
 
 		self.individuos = novosIndividuos
-
 		self.FitnessFunction()
 
 	#Seleciona os melhores individuos baseado em probabilidade utilizando a formula de fitness e a reproducao se da por 100-x(gerado randomicamente)% pai e x% mae
@@ -145,11 +140,9 @@ class GA(object):
 			notaTotal = notaTotal + nota
 
 		novosIndividuos = copy.deepcopy( self.individuos )
-
 		for number in xrange( len(self.individuos) ):
 
 			#Sorteio do individuo 1
-
 			probabilidade = np.random.uniform( 0 , notaTotal )
 			notaLocal = 0
 			individuoEscolhido1 = 0
@@ -227,15 +220,13 @@ class GA(object):
 				segundaMaiorNota = nota
 				individuoSegundaMaiorNota = self.notas.index( segundaMaiorNota )
 
-#PRECISA MEXER AQUI
+		#PRECISA MEXER AQUI
 		for number in xrange( len(self.individuos) ):
 			
 			while True is True :
 				influenciaParental = np.random.random_sample()
 				for gene in xrange( len(self.genes) ):
 					novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
-
-				print self.FitnessFunctionIndividual( novosIndividuos[number] )
 
 				if (self.FitnessFunctionIndividual(novosIndividuos[number])>self.notas[individuoMaiorNota]):
 					break
