@@ -93,7 +93,7 @@ class GA(object):
 	#Seleciona os melhores individuos baseado em probabilidade utilizando a formula de fitness e a reproducao se da por 50% pai e 50% mae
 	#Recebe arrays de individuos e de notas
 	#Devolve nova populacao (novos individuos)
-	def EvolucaoProbabilisticaMeioAMeio( self ):
+	def EvolProbabilisticaMeioAMeio( self ):
 
 		notaTotal = 0
 		for nota in self.notas:
@@ -133,7 +133,7 @@ class GA(object):
 	#Seleciona os melhores individuos baseado em probabilidade utilizando a formula de fitness e a reproducao se da por 100-x(gerado randomicamente)% pai e x% mae
 	#Recebe arrays de individuos e de notas
 	#Devolve nova populacao (novos individuos)
-	def EvolucaoProbabilisticaRandomica( self ):
+	def EvolProbabilisticaRandomica( self ):
 		
 		notaTotal = 0
 		for nota in self.notas:
@@ -175,7 +175,7 @@ class GA(object):
 	#Seleciona os 2 melhores individuos e a reproducao se da por 100-x(gerado randomicamente)% pai e x% mae
 	#Recebe arrays de individuos e de notas
 	#Devolve nova populacao (novos individuos)
-	def EvolucaoHierarquicaRandomica( self  ):
+	def EvolHierarquicaRandomica( self  ):
 
 		notaTotal = 0
 		for nota in self.notas:
@@ -204,7 +204,7 @@ class GA(object):
 	#Seleciona os 2 melhores individuos e a reproducao se da por 100-x(gerado randomicamente)% pai e x% mae
 	#Recebe arrays de individuos e de notas
 	#Devolve nova populacao (novos individuos)
-	def EvolucaoHierarquicaRandomica2( self  ):
+	def EvolHierarquicaRandomica2( self  ):
 		notaTotal = 0
 		for nota in self.notas:
 			notaTotal = notaTotal + nota
