@@ -9,16 +9,18 @@ class GA(object):
 
 		#caracteristicas de cada elemento
 		self.genes = []
+		self.genes.append( { "caracteristicaA": 05, "caracteristicaB": 10 })
+		self.genes.append( { "caracteristicaA": 15, "caracteristicaB": 30 })
 		#genes A. Exemplo: diesel
-		self.genes.append({ "caracteristicaA": 10, "caracteristicaB": 20, "caracteristicaC": 30, "caracteristicaD": 40, "caracteristicaE": 50 })
+#		self.genes.append({ "caracteristicaA": 10, "caracteristicaB": 20, "caracteristicaC": 30, "caracteristicaD": 40, "caracteristicaE": 50 })
 		#genes B. Ex: biodiesel de mamona
-		self.genes.append( { "caracteristicaA": 05, "caracteristicaB": 30, "caracteristicaC": 35, "caracteristicaD": 45, "caracteristicaE": 10 })
+#		self.genes.append( { "caracteristicaA": 05, "caracteristicaB": 30, "caracteristicaC": 35, "caracteristicaD": 45, "caracteristicaE": 10 })
 		#genes C
-		self.genes.append( { "caracteristicaA": 15, "caracteristicaB": 10, "caracteristicaC": 20, "caracteristicaD": 10, "caracteristicaE": 20 })
+#		self.genes.append( { "caracteristicaA": 15, "caracteristicaB": 10, "caracteristicaC": 20, "caracteristicaD": 10, "caracteristicaE": 20 })
 		#genes D
-		self.genes.append( { "caracteristicaA": 20, "caracteristicaB": 25, "caracteristicaC": 10, "caracteristicaD": 30, "caracteristicaE": 60 })
+#		self.genes.append( { "caracteristicaA": 20, "caracteristicaB": 25, "caracteristicaC": 10, "caracteristicaD": 30, "caracteristicaE": 60 })
 		#genes E
-		self.genes.append( { "caracteristicaA": 25, "caracteristicaB": 15, "caracteristicaC": 40, "caracteristicaD": 20, "caracteristicaE": 15 })
+#		self.genes.append( { "caracteristicaA": 25, "caracteristicaB": 15, "caracteristicaC": 40, "caracteristicaD": 20, "caracteristicaE": 15 })
 
 		self.individuos = []
 		self.notas = []
@@ -42,9 +44,7 @@ class GA(object):
 			for m in xrange(len(self.genes)):
 				if m==(len(self.genes)-1):
 					self.individuos[n].append(DNATotal-DNAOcupado)
-					print m
 				else:
-					print m
 					self.individuos[n].append(np.random.random_integers(0,DNATotal-DNAOcupado))
 					DNAOcupado = DNAOcupado+self.individuos[n][m]
 
@@ -58,8 +58,10 @@ class GA(object):
 		for individuo in self.individuos:
 			notaLocal = 0	
 			for gene in xrange( len(self.genes) ):
-				notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
-			novasNotas.append( 15000 - notaLocal )
+				#notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
+				notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"])
+			#novasNotas.append( 15000 - notaLocal )
+			novasNotas.append( notaLocal )
 
 		self.notas = novasNotas
 
@@ -68,7 +70,8 @@ class GA(object):
 	def FitnessFunctionIndividual( self, individuo ):
 		notaLocal = 0
 		for gene in xrange( len(self.genes) ):
-			notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
+			notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"])
+			#notaLocal = notaLocal + individuo[gene]*(self.genes[gene]["caracteristicaA"]+self.genes[gene]["caracteristicaB"]+self.genes[gene]["caracteristicaC"]+self.genes[gene]["caracteristicaD"]+self.genes[gene]["caracteristicaE"])
 
 		return 15000 - notaLocal
 
@@ -229,6 +232,7 @@ class GA(object):
 					novosIndividuos[number][gene] = self.individuos[individuoMaiorNota][gene]*(influenciaParental) + self.individuos[individuoSegundaMaiorNota][gene]*(1-influenciaParental)
 
 				if (self.FitnessFunctionIndividual(novosIndividuos[number])>self.notas[individuoMaiorNota]):
+					print "achou"
 					break
 
 		self.individuos = novosIndividuos
